@@ -1,26 +1,11 @@
 #!/bin/bash
 
-function get_value {
-  local object=$1
-  local key=$2
-
-  # Convert key string into array
-  IFS="/" read -ra key_arr <<< "$key"
-
-  # Traverse the object using the keys
-  local current="$object"
-  for k in "${key_arr[@]}"; do
-    if [[ -v "$current[$k]" ]]; then
-      current="${current[$k]}"
-    else
-      echo "Key not found: $key" >&2
-      return 1
-    fi
-  done
-
-  echo "$current"
+get_value() {
+  local object="$1"
+  local key="$2"
+  local value="$(echo "$object" | jq -r ".$key")"
+  echo "$value"
 }
-
 
 
 object='{"a":{"b":{"c":"d"}}}'
